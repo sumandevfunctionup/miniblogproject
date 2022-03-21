@@ -1,22 +1,29 @@
 const express = require('express');
 const router = express.Router();
-const CowinController= require("../controllers/cowinController")
+const authorController = require("../controllers/authorController")
+const blogController = require("../controllers/blogController")
+const mw = require("../middleware/auth-middleware")
 
+// create author
+router.post("/createAuthor", authorController.createAuthor)
 
+//  create blog
+router.post("/createBlog",mw.authentication, blogController.createBlog)
 
-router.get("/test-me", function (req, res) {
-    res.send("My first ever api!")
-})
+//  delete blog by query
+router.delete("/deleteBlog",mw.authentication,mw.authorization, blogController.deleteBlogByQuery)
 
+// delete blog by path params
+router.delete("/deleteBlog/:blogId",mw.authentication,mw.authorization, blogController.deleteBlogByPath)
 
-router.get("/cowin/states", CowinController.getStates)
-router.get("/cowin/districtsInState/:stateId", CowinController.getDistricts)
-router.get("/cowin/getByPin", CowinController.getByPin)
+//  update blog
+router.put("/updateBlog/:blogId" ,mw.authentication,mw.authorization, blogController.updateBlog)
 
-router.post("/cowin/getOtp", CowinController.getOtp)
+//  get blog
+router.get("/getBlogs" ,mw.authentication, blogController.getBlogs)
 
-// WRITE A GET API TO GET THE LIST OF ALL THE "vaccination sessions by district id" for any given district id and for any given date
-
+//  login  author
+router.post("/loginAuthor" , authorController.loginAuthor)
 
 
 module.exports = router;
